@@ -108,10 +108,10 @@ ___
 dispatched after MARK_FEATURE ended
 
 ```java
-  new HashMap<String, Object>(){{
-     put("type", "FEATURE_MARKED");
-     put("feature_id", feature_id);
-  }};
+new HashMap<String, Object>(){{
+  put("type", "FEATURE_MARKED");
+  put("feature_id", feature_id);
+}};
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;**feature_id** <br/>
@@ -124,10 +124,10 @@ ___
 dispatched after HIGHLIGHT_FEATURE ended
 
 ```java
-  new HashMap<String, Object>(){{
-     put("type", "FEATURE_HIGHLIGHTED");
-     put("feature_id", feature_id);
-  }};
+new HashMap<String, Object>(){{
+  put("type", "FEATURE_HIGHLIGHTED");
+  put("feature_id", feature_id);
+}};
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;**feature_id** <br/>
@@ -140,9 +140,9 @@ ___
 dispatched after SET_ZOOM ended
 
 ```java
-  new HashMap<String, Object>(){{
-     put("type", "ZOOM_ENDED");
-  }};
+new HashMap<String, Object>(){{
+  put("type", "ZOOM_ENDED");
+}};
 ```
 ___
 
@@ -151,9 +151,9 @@ ___
 dispatched after SET_CENTER ended
 
 ```java
-  new HashMap<String, Object>(){{
-     put("type", "CENTER_ENDED");
-  }};
+new HashMap<String, Object>(){{
+  put("type", "CENTER_ENDED");
+}};
 ```
 
 ### <a name="your_app_to_tmaps">Your APP actions dispatched to TMaps</a>
@@ -163,10 +163,10 @@ dispatched after SET_CENTER ended
 dispatch it to set tenants of map. 
 
 ```java
-  new HashMap<String, Object>(){{
-     put("type", "SET_TENANT_DATA");
-     put("payload", tenants_json);
-  }}
+new HashMap<String, Object>(){{
+  put("type", "SET_TENANT_DATA");
+  put("payload", tenants_json);
+}}
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;**payload** <br/>
@@ -179,11 +179,11 @@ ___
 dispatch it to change default feature popup template.
 
 ```java
-  new HashMap<String, Object>(){{
-     put("type", "SET_DEFAULT_FEATURE_POPUP_TEMPLATE");
-     put("template", template);
-     put("template_custom_data", templateCustomData);
-  }}
+new HashMap<String, Object>(){{
+  put("type", "SET_DEFAULT_FEATURE_POPUP_TEMPLATE");
+  put("template", template);
+  put("template_custom_data", templateCustomData);
+}}
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;**template** <br/>
@@ -200,10 +200,10 @@ ___
 dispatch it to change theme of map.
 
 ```java
-  new HashMap<String, Object>(){{
-     put("primary", primary_color);
-     put("accent", accent_color);
-  }}
+new HashMap<String, Object>(){{
+  put("primary", primary_color);
+  put("accent", accent_color);
+}}
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;**primary** <br/>
@@ -219,16 +219,16 @@ ___
 dispatch it to load map.
 
 ```java
-  new HashMap<String, Object>(){{
-     put("type", "LOAD_MAP");
-     put("map_id", map_id);
-     put("theme", new HashMap<String, Object>(){{
-        put("primary", primary_color);
-        put("accent", accent_color);
-     }});
-     put("center", Arrays.asList(lng, lat));
-     put("zoom", zoom);
-  }}
+new HashMap<String, Object>(){{
+  put("type", "LOAD_MAP");
+  put("map_id", map_id);
+  put("theme", new HashMap<String, Object>(){{
+     put("primary", primary_color);
+     put("accent", accent_color);
+  }});
+  put("center", Arrays.asList(lng, lat));
+  put("zoom", zoom);
+}}
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;**map_id** <br/>
@@ -253,10 +253,10 @@ ___
 dispatch it to change render mode.
 
 ```java
-  new HashMap<String, Object>(){{
-     put("type", "CHANGE_RENDER_MODE");
-     put("modeToRender", modeToRender);
-  }}
+new HashMap<String, Object>(){{
+  put("type", "CHANGE_RENDER_MODE");
+  put("modeToRender", modeToRender);
+}}
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;**modeToRender**
@@ -270,11 +270,11 @@ ___
 dispatch it to change zoom of map.
 
 ```java
-  new HashMap<String, Object>(){{
-     put("type", "SET_ZOOM");
-     put("zoom", zoom);
-     put("zoom_type", zoom_type);
-  }}
+new HashMap<String, Object>(){{
+  put("type", "SET_ZOOM");
+  put("zoom", zoom);
+  put("zoom_type", zoom_type);
+}}
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;**zoom**
@@ -290,10 +290,10 @@ ___
 dispatch it to change center of map.
 
 ```java
-  new HashMap<String, Object>(){{
-     put("type", "SET_CENTER");
-     put("center", Arrays.asList(lng, lat));
-  }}
+new HashMap<String, Object>(){{
+  put("type", "SET_CENTER");
+  put("center", Arrays.asList(lng, lat));
+}}
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;**center**
@@ -307,10 +307,10 @@ ___
 dispatch it to highlight feature.
 
 ```java
-  new HashMap<String, Object>(){{
-     put("type", "HIGHLIGHT_FEATURE");
-     put("feature_id", feature_id);
-  }}
+new HashMap<String, Object>(){{
+  put("type", "HIGHLIGHT_FEATURE");
+  put("feature_id", feature_id);
+}}
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;**feature_id**
@@ -323,10 +323,10 @@ ___
 dispatch it to mark feature.
 
 ```java
-  new HashMap<String, Object>(){{
-     put("type", "MARK_FEATURE");
-     put("feature_id", feature_id);
-  }}
+new HashMap<String, Object>(){{
+  put("type", "MARK_FEATURE");
+  put("feature_id", feature_id);
+}}
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;**feature_id**
