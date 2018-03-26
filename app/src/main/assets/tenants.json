@@ -1,0 +1,34 @@
+ [
+  {
+  "id": "1",
+  "name": "name1",
+  "feature_id": "w24799",
+  "type": "Exhibitor",
+  "booth_id": "b1",
+  "icon": ""
+  },
+  {
+  "id": "2",
+  "name": "name2",
+  "feature_id": "w23978",
+  "type": "Exhibitor",
+  "booth_id": "b2",
+  "icon": ""
+  },
+  {
+  "id": "3",
+  "name": "name3",
+  "feature_id": "w24231",
+  "type": "Exhibitor",
+  "booth_id": "b3",
+  "icon": ""
+  },
+  {
+  "id": "4",
+  "name": "name4",
+  "feature_id": "w23630",
+  "type": "Exhibitor",
+  "booth_id": "b4",
+  "icon": ""
+  }
+]
