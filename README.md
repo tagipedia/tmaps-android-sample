@@ -1,7 +1,7 @@
 # tmaps-android-sample
 
 ## Installation
-### To integrate TMaps into your Xcode project, add it to your project:
+### To integrate TMaps into your Android Studio project, add it to your project:
 1. Create folder named tmapswww
 2. Download and Unzip map package inside tmapswww (Request map package from Tagipedia Team)
 3. Read our sample for examples
