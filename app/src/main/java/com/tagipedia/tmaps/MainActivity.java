@@ -70,6 +70,10 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
                     e.printStackTrace();
                 }
             }
+            @JavascriptInterface
+            public void reload() {
+                runOnUiThread(new Runnable() { @Override public void run() { mWebView.reload(); } });
+            }
             @Override
             public Class<? extends Annotation> annotationType() {
                 return null;
@@ -107,7 +111,7 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
     }
     private void setTagipediaObjectAndLoadMap() {
         String tbString =
-                "window.__tb__ = {dispatch: function(action){__tmaps_bridge__.dispatch(JSON.stringify(action));}}";
+                "window.__tb__ = {dispatch: function(action){__tmaps_bridge__.dispatch(JSON.stringify(action));}}; window.__reload__ = function(){__tmaps_bridge__.reload();};";
         injectScript(tbString);
     }
 
