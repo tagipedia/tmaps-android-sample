@@ -12,7 +12,7 @@ it works using dispatch actions between your APP and TMaps. So your APP dispatch
 ## Usage
 ### <a name="RELOAD">Allow Reload map from JS</a> 
 
-**IMPORTANT:** You should inject window.__reload__ script into webview because it is called from JS when TMap need to reload webview. **if you don't inject it webview will not reloaded**.
+**IMPORTANT:** You should inject this script into webview because it is called from TMap when TMap need to reload webview. **if you don't inject it webview will not reloaded**.
 
 ```java
 mWebView.addJavascriptInterface(new JavascriptInterface(){
