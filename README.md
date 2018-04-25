@@ -173,6 +173,152 @@ new HashMap<String, Object>(){{
 }};
 ```
 
+___
+
+#### <a name="EVENT_LOGGED">Event logged</a>
+
+dispatched after any event happened in TMaps. Your app can send analytics after receive this action.
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "Maps");
+  put("event_action", "Loaded");
+  put("event_label", map_name);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+  }});
+}};
+```
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "Features");
+  put("event_action", "Tapped");
+  put("event_label", feature_display_name);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+      put("feature_id", feature_id);
+  }});
+}};
+```
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "Features");
+  put("event_action", "Highlighted");
+  put("event_label", feature_display_name);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+      put("feature_id", feature_id);
+  }});
+}};
+```
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "Features");
+  put("event_action", "Searched");
+  put("event_label", feature_display_name);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+      put("feature_id", feature_id);
+  }});
+}};
+```
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "Categories");
+  put("event_action", "Highlighted");
+  put("event_label", category);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+  }});
+}};
+```
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "Categories");
+  put("event_action", "Searched");
+  put("event_label", category);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+  }});
+}};
+```
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "Routes");
+  put("event_action", "Routed");
+  put("event_label", source_display_name => target_display_name);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+      put("source_feature_id", source_feature_id);
+      put("target_feature_id", target_feature_id);
+  }});
+}};
+```
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "Buildings");
+  put("event_action", "Tapped");
+  put("event_label", building_name);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+      put("building_id", building_id);
+  }});
+}};
+```
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "Buildings");
+  put("event_action", "Opened");
+  put("event_label", building_name);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+      put("building_id", building_id);
+  }});
+}};
+```
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "Floors");
+  put("event_action", "Opened");
+  put("event_label", floor_label);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+      put("layer_id", layer_id);
+  }});
+}};
+```
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "RenderModes");
+  put("event_action", "Changed");
+  put("event_label", render_mode);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+  }});
+}};
+```
+
 ### <a name="your_app_to_tmaps">Your APP actions dispatched to TMaps</a>
 
 #### <a name="set_tenant_data">Set tenant data</a>
