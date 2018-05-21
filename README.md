@@ -532,6 +532,7 @@ new HashMap<String, Object>(){{
 }}
 ```
 
+&nbsp;&nbsp;&nbsp;&nbsp;**isGpsActivated**
 &nbsp;&nbsp;&nbsp;&nbsp;**Required** *boolean* 
 
 ## Types
