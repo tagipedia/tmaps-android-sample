@@ -318,6 +318,17 @@ new HashMap<String, Object>(){{
   }});
 }};
 ```
+___
+
+#### <a name="LOCATION_SERVICE">Check Location Service</a>
+
+dispatched after Tapped GPS Button in TMaps. You Should turn on Location Service and then dispatch <a href="#start_updating_location">Start</a> to begin updating location  
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "CHECK_GPS_AVAILABILITY");
+}};
+```
 
 ### <a name="your_app_to_tmaps">Your APP actions dispatched to TMaps</a>
 
@@ -495,6 +506,33 @@ new HashMap<String, Object>(){{
 &nbsp;&nbsp;&nbsp;&nbsp;**feature_id**
 &nbsp;&nbsp;&nbsp;&nbsp;**Required** *String* with valid feature id
 
+
+___
+
+#### Show GPS Button
+
+dispatch it after Map Loaded to show GPS button
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "ENABLE_GPS_BUTTON");
+}}
+```
+
+___
+
+#### <a name="start_updating_location">Start Updating Location</a>
+
+dispatch it after <a href="#LOCATION_SERVICE">check</a> location service to start updating user location and showing nearest places to user
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "START_UPDATING_LOCATION");
+  put("is_gps_activated", is_gps_activated);
+}}
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *boolean* 
 
 ## Types
 
