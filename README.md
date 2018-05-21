@@ -528,7 +528,7 @@ dispatch it after <a href="#LOCATION_SERVICE">check</a> location service to star
 ```java
 new HashMap<String, Object>(){{
   put("type", "START_UPDATING_LOCATION");
-  put("is_gps_activated", is_gps_activated);
+  put("isGpsActivated", isGpsActivated);
 }}
 ```
 
