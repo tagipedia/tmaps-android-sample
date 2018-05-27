@@ -529,6 +529,12 @@ new HashMap<String, Object>(){{
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 ```
 
+** From Samples **
+https://github.com/tagipedia/tmaps-android-sample/blob/1f109c83e37a6e569e9bef7b71f2ca6190d44636/app/src/main/java/com/tagipedia/tmaps/MainActivity.java#L107-L115
+https://github.com/tagipedia/tmaps-android-sample/blob/1f109c83e37a6e569e9bef7b71f2ca6190d44636/app/src/main/java/com/tagipedia/tmaps/MainActivity.java#L134-L200
+https://github.com/tagipedia/tmaps-android-sample/blob/1f109c83e37a6e569e9bef7b71f2ca6190d44636/app/src/main/java/com/tagipedia/tmaps/MainActivity.java#L259-L264
+https://github.com/tagipedia/tmaps-android-sample/blob/1f109c83e37a6e569e9bef7b71f2ca6190d44636/app/src/main/java/com/tagipedia/tmaps/MainActivity.java#L277-L284
+https://github.com/tagipedia/tmaps-android-sample/blob/1f109c83e37a6e569e9bef7b71f2ca6190d44636/app/src/main/java/com/tagipedia/tmaps/MainActivity.java#L304-L344
 ___
 
 #### <a name="start_updating_location">Start Updating Location</a>
