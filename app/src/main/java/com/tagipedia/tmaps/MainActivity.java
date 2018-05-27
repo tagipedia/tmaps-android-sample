@@ -278,7 +278,7 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
             dispatchMessage(new LinkedHashMap<String, Object>() {
                 {
                     put("type", "START_UPDATING_LOCATION");
-                    put("isGpsActivated",true);
+                    put("is_gps_activated",true);
                 }
             });
         }
