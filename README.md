@@ -519,6 +519,16 @@ new HashMap<String, Object>(){{
 }}
 ```
 
+**Don't forget to add permissions** to AndroidManifest.xml
+
+```xml
+<uses-permission android:name="android.permission.ACCESS_GPS" />
+<uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
+<uses-permission android:name="android.permission.ACCESS_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+```
+
 ___
 
 #### <a name="start_updating_location">Start Updating Location</a>
