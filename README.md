@@ -531,7 +531,7 @@ new HashMap<String, Object>(){{
   put("is_gps_activated", is_gps_activated);
 }}
 ```
-
+&nbsp;&nbsp;&nbsp;&nbsp;**is_gps_activated**
 &nbsp;&nbsp;&nbsp;&nbsp;**Required** *boolean* 
 
 ## Types
