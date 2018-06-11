@@ -545,6 +545,28 @@ new HashMap<String, Object>(){{
 }}
 ```
 
+**Don't forget to add permissions** to AndroidManifest.xml
+
+```xml
+<uses-permission android:name="android.permission.ACCESS_GPS" />
+<uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
+<uses-permission android:name="android.permission.ACCESS_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+```
+
+** Follow our samples **
+ <br/>
+https://github.com/tagipedia/tmaps-android-sample/blob/1f109c83e37a6e569e9bef7b71f2ca6190d44636/app/src/main/java/com/tagipedia/tmaps/MainActivity.java#L107-L115
+ <br/>
+https://github.com/tagipedia/tmaps-android-sample/blob/1f109c83e37a6e569e9bef7b71f2ca6190d44636/app/src/main/java/com/tagipedia/tmaps/MainActivity.java#L134-L200
+ <br/>
+https://github.com/tagipedia/tmaps-android-sample/blob/1f109c83e37a6e569e9bef7b71f2ca6190d44636/app/src/main/java/com/tagipedia/tmaps/MainActivity.java#L259-L264
+ <br/>
+https://github.com/tagipedia/tmaps-android-sample/blob/1f109c83e37a6e569e9bef7b71f2ca6190d44636/app/src/main/java/com/tagipedia/tmaps/MainActivity.java#L277-L284
+ <br/>
+https://github.com/tagipedia/tmaps-android-sample/blob/1f109c83e37a6e569e9bef7b71f2ca6190d44636/app/src/main/java/com/tagipedia/tmaps/MainActivity.java#L304-L344
+ <br/>
 ___
 
 #### <a name="start_updating_location">Start Updating Location using GPS</a>
