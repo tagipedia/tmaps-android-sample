@@ -32,5 +32,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.0.2'
     compile 'com.android.support:support-v4:26.0.2'
     compile 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'
+    compile 'com.estimote:indoorsdk:2.5.0'
+    compile 'com.estimote:sdk:1.4.1'
     testCompile 'junit:junit:4.12'
 }
