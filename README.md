@@ -318,6 +318,7 @@ new HashMap<String, Object>(){{
   }});
 }};
 ```
+
 ___
 
 #### <a name="LOCATION_SERVICE">Check Location Service</a>
@@ -329,6 +330,32 @@ new HashMap<String, Object>(){{
   put("type", "CHECK_GPS_AVAILABILITY");
 }};
 ```
+
+#### <a name="BEACON_LOCATION_SERVICE">Check Beacon Location Service</a>
+
+dispatched after Tapped Beacon Location Button in TMaps. You Should turn on Bluetooth Service and then dispatch <a href="#start_updating_beacon_location">Start</a> to begin updating location  
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "CHECK_BEACON_LOCATION_AVAILABILITY");
+}};
+```
+
+#### <a name="START_POSITION_UPDATES_FOR_BEACON_LOCATION">Start Beacon Location Manager</a>
+
+dispatched after starting updating beacon location in TMaps. You Should start or stop beacon manager according to beacon manager state. if beacon manager state is true you shoud start beacon manager then dispatch the new position to TMaps to <a href="#SET_USER_BEACON_LOCATION">update</a> user location
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "START_POSITION_UPDATES_FOR_BEACON_LOCATION");
+  put("start_beacon_manager",start_beacon_manager);
+}};
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;**start_beacon_manager** <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *boolean*  beacon manager state
+
+
 
 ### <a name="your_app_to_tmaps">Your APP actions dispatched to TMaps</a>
 
@@ -506,7 +533,6 @@ new HashMap<String, Object>(){{
 &nbsp;&nbsp;&nbsp;&nbsp;**feature_id**
 &nbsp;&nbsp;&nbsp;&nbsp;**Required** *String* with valid feature id
 
-
 ___
 
 #### Show GPS Button
@@ -543,7 +569,7 @@ https://github.com/tagipedia/tmaps-android-sample/blob/1f109c83e37a6e569e9bef7b7
  <br/>
 ___
 
-#### <a name="start_updating_location">Start Updating Location</a>
+#### <a name="start_updating_location">Start Updating Location using GPS</a>
 
 dispatch it after <a href="#LOCATION_SERVICE">check</a> location service to start updating user location and showing nearest places to user
 
@@ -553,9 +579,56 @@ new HashMap<String, Object>(){{
   put("is_gps_activated", is_gps_activated);
 }}
 ```
-
 &nbsp;&nbsp;&nbsp;&nbsp;**is_gps_activated**
 &nbsp;&nbsp;&nbsp;&nbsp;**Required** *boolean* 
+
+#### Show Beacon Location Button
+
+dispatch it after Map Loaded to show Beacon Location button
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "ENABLE_BEACON_LOCATION_BUTTON");
+}}
+```
+
+#### <a name="start_updating_beacon_location">Start Updating Location using Beacon Location</a>
+
+dispatch it after <a href="#BEACON_LOCATION_SERVICE">check</a> beacon location service to start updating user location and showing nearest places to user
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "START_UPDATING_BEACON_LOCATION");
+  put("is_beacon_location_activated", is_beacon_location_activated);
+}}
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;**is_beacon_location_activated**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *boolean* 
+
+
+#### <a name="SET_USER_BEACON_LOCATION">Update User Location (Beacon Location)</a>
+
+dispatch it after beacon location service <a href="#START_POSITION_UPDATES_FOR_BEACON_LOCATION">started</a> to update user location and showing nearest places to user
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "SET_USER_BEACON_LOCATION");
+  put("x", x);
+  put("y", y);
+  put("origin_lat", origin_lat);
+  put("origin_lng", origin_lng);
+}}
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;**x**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *Number* </br>
+&nbsp;&nbsp;&nbsp;&nbsp;**y**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *Number* </br>
+&nbsp;&nbsp;&nbsp;&nbsp;**origin_lat**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *Number* </br>
+&nbsp;&nbsp;&nbsp;&nbsp;**origin_lng**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *Number* 
 
 ## Types
 

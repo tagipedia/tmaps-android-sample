@@ -4,12 +4,19 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +29,17 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.estimote.indoorsdk.EstimoteCloudCredentials;
+import com.estimote.indoorsdk.IndoorLocationManagerBuilder;
+import com.estimote.indoorsdk_module.algorithm.OnPositionUpdateListener;
+import com.estimote.indoorsdk_module.algorithm.ScanningIndoorLocationManager;
+import com.estimote.indoorsdk_module.cloud.CloudCallback;
+import com.estimote.indoorsdk_module.cloud.EstimoteCloudException;
+import com.estimote.indoorsdk_module.cloud.IndoorCloudManager;
+import com.estimote.indoorsdk_module.cloud.IndoorCloudManagerFactory;
+import com.estimote.indoorsdk_module.cloud.Location;
+import com.estimote.indoorsdk_module.cloud.LocationPosition;
+import com.estimote.internal_plugins_api.cloud.CloudCredentials;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -36,8 +54,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -55,7 +76,12 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
     private GeolocationPermissions.Callback mGeolocationCallback;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    public static String locationDetails = "";
+    public double originLatitude = 0, originLongitude = 0;
+    ScanningIndoorLocationManager indoorLocationManager;
+    public static boolean bluetoothPermissionRequested = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -208,6 +234,89 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
             }
         });
     }
+    public void initializeBeaconLocation(final boolean userInteract) {
+        final MainActivity mainActivity = this;
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String line, newjson = "";
+                    URL urls = new URL(getResources().getString(R.string.location_url)+getResources().getString(R.string.location));
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(urls.openStream(), "UTF-8"))) {
+                        while ((line = reader.readLine()) != null) {
+                            newjson += line;
+                        }
+                        String json = newjson.toString();
+                        locationDetails = json;
+                        JSONObject jObj = new JSONObject(json);
+                        originLatitude = (double)jObj.get("latitude");
+                        originLongitude = (double)jObj.get("longitude");
+                        final CloudCredentials cloudCredentials = new EstimoteCloudCredentials(getResources().getString(R.string.app_id), getResources().getString(R.string.app_token));
+                        IndoorCloudManager cloudManager = new IndoorCloudManagerFactory().create(getApplicationContext(), new EstimoteCloudCredentials(getResources().getString(R.string.app_id), getResources().getString(R.string.app_token)));
+                        cloudManager.getLocation(getResources().getString(R.string.location), new CloudCallback<Location>() {
+                            @Override
+                            public void success(Location location) {
+                                indoorLocationManager =
+                                        new IndoorLocationManagerBuilder(getApplicationContext(), location, cloudCredentials)
+                                                .withDefaultScanner()
+                                                .build();
+                                indoorLocationManager.setOnPositionUpdateListener(new OnPositionUpdateListener() {
+                                    @Override
+                                    public void onPositionUpdate(final LocationPosition locationPosition) {
+                                        dispatchMessage(new LinkedHashMap<String, Object>() {
+                                            {
+                                                put("type", "SET_USER_BEACON_LOCATION");
+                                                put("origin_lat",originLatitude);
+                                                put("origin_lng",originLongitude);
+                                                put("x",locationPosition.getX());
+                                                put("y",locationPosition.getY());
+                                            }
+                                        });
+                                    }
+                                    @Override
+                                    public void onPositionOutsideLocation() {
+                                        Log.d("on Position Outside", "outside: ");
+                                    }
+                                });
+                                if (userInteract){
+                                    indoorLocationManager.startPositioning();
+                                }
+                            }
+                            @Override
+                            public void failure(EstimoteCloudException e) {
+                                Log.d("failed", "failed to get location from cloud: ");
+                                if (userInteract){
+                                    dispatchMessage(new LinkedHashMap<String, Object>() {
+                                        {
+                                            put("type", "START_UPDATING_BEACON_LOCATION");
+                                            put("is_beacon_location_activated",false);
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (userInteract) {
+                        dispatchMessage(new LinkedHashMap<String, Object>() {
+                            {
+                                put("type", "START_UPDATING_BEACON_LOCATION");
+                                put("is_beacon_location_activated", false);
+                            }
+                        });
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                TUtils.showNoInternetAccssesDialog(mainActivity, "error", "something happen while retriving location from internet. check internet connection and try again");
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+    }
     private void setTagipediaObjectAndLoadMap() {
         String tbString =
                 "window.__tb__ = {dispatch: function(action){__tmaps_bridge__.dispatch(JSON.stringify(action));}}; window.__reload__ = function(){__tmaps_bridge__.reload();};";
@@ -257,12 +366,18 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
                 }
             });
         } else if (message.get("type").equals("MAP_LOADED")){
+//            dispatchMessage(new LinkedHashMap<String, Object>() {
+//                {
+//                    put("type", "ENABLE_GPS_BUTTON");
+//                }
+//            });
             dispatchMessage(new LinkedHashMap<String, Object>() {
                 {
-                    put("type", "ENABLE_GPS_BUTTON");
+                    put("type", "ENABLE_BEACON_LOCATION_BUTTON");
                 }
             });
 
+            initializeBeaconLocation(false);
         } else if(message.get("type").equals("FEATURES_TAPPED")){
             dispatchMessage(new LinkedHashMap<String, Object>() {
                 {
@@ -281,6 +396,37 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
                     put("is_gps_activated",true);
                 }
             });
+        } else if (message.get("type").equals("CHECK_BEACON_LOCATION_AVAILABILITY")){
+            if(indoorLocationManager == null){
+                initializeBeaconLocation(true);
+            }
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (bluetoothAdapter.isEnabled()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    TUtils.showLocationDialog(this, "Location Permission", "get location permission");
+                }
+                dispatchMessage(new LinkedHashMap<String, Object>() {
+                    {
+                        put("type", "START_UPDATING_BEACON_LOCATION");
+                        put("is_beacon_location_activated",true);
+                    }
+                });
+            }
+            else {
+                bluetoothPermissionRequested = true;
+                TUtils.showBluetoothDialog(this, "Bluetooth Needed" , "we use bluetoorh to detect nearest places to you");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    TUtils.showLocationDialog(this, "Location Permission", "get location permission");
+                }
+            }
+        } else if (message.get("type").equals("START_POSITION_UPDATES_FOR_BEACON_LOCATION")){
+            boolean stat_beacon_manager = (boolean) message.get("start_beacon_manager");
+            if (stat_beacon_manager && indoorLocationManager != null){
+                indoorLocationManager.startPositioning();
+            }
+            else {
+                indoorLocationManager.stopPositioning();
+            }
         }
     }
 
@@ -332,10 +478,31 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
                         if (mGeolocationCallback != null) {
                             mGeolocationCallback.invoke(mGeolocationOrigin, true, false);
                         }
+                        if (bluetoothPermissionRequested){
+                            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                            if(bluetoothAdapter.isEnabled()){
+                                dispatchMessage(new LinkedHashMap<String, Object>() {
+                                    {
+                                        put("type", "START_UPDATING_BEACON_LOCATION");
+                                        put("is_beacon_location_activated",true);
+                                    }
+                                });
+                                bluetoothPermissionRequested = false;
+                            }
+                        }
                         break;
                     case Activity.RESULT_CANCELED:
                         if (mGeolocationCallback != null) {
                             mGeolocationCallback.invoke(mGeolocationOrigin, false, false);
+                        }
+                        if (bluetoothPermissionRequested){
+                            dispatchMessage(new LinkedHashMap<String, Object>() {
+                                {
+                                    put("type", "START_UPDATING_BEACON_LOCATION");
+                                    put("is_beacon_location_activated",false);
+                                }
+                            });
+                            bluetoothPermissionRequested = false;
                         }
                         break;
                 }
