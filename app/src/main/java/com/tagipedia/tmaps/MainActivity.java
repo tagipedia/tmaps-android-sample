@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -231,7 +234,8 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
             }
         });
     }
-    public void initializeBeaconLocation() {
+    public void initializeBeaconLocation(final boolean userInteract) {
+        final MainActivity mainActivity = this;
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -247,45 +251,71 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
                         JSONObject jObj = new JSONObject(json);
                         originLatitude = (double)jObj.get("latitude");
                         originLongitude = (double)jObj.get("longitude");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        final CloudCredentials cloudCredentials = new EstimoteCloudCredentials(getResources().getString(R.string.app_id), getResources().getString(R.string.app_token));
-        IndoorCloudManager cloudManager = new IndoorCloudManagerFactory().create(getApplicationContext(), new EstimoteCloudCredentials(getResources().getString(R.string.app_id), getResources().getString(R.string.app_token)));
-        cloudManager.getLocation(getResources().getString(R.string.location), new CloudCallback<Location>() {
-            @Override
-            public void success(Location location) {
-                indoorLocationManager =
-                        new IndoorLocationManagerBuilder(getApplicationContext(), location, cloudCredentials)
-                                .withDefaultScanner()
-                                .build();
-                indoorLocationManager.setOnPositionUpdateListener(new OnPositionUpdateListener() {
-                    @Override
-                    public void onPositionUpdate(final LocationPosition locationPosition) {
-                        dispatchMessage(new LinkedHashMap<String, Object>() {
-                            {
-                                put("type", "SET_USER_BEACON_LOCATION");
-                                put("origin_lat",originLatitude);
-                                put("origin_lng",originLongitude);
-                                put("x",locationPosition.getX());
-                                put("y",locationPosition.getY());
+                        final CloudCredentials cloudCredentials = new EstimoteCloudCredentials(getResources().getString(R.string.app_id), getResources().getString(R.string.app_token));
+                        IndoorCloudManager cloudManager = new IndoorCloudManagerFactory().create(getApplicationContext(), new EstimoteCloudCredentials(getResources().getString(R.string.app_id), getResources().getString(R.string.app_token)));
+                        cloudManager.getLocation(getResources().getString(R.string.location), new CloudCallback<Location>() {
+                            @Override
+                            public void success(Location location) {
+                                indoorLocationManager =
+                                        new IndoorLocationManagerBuilder(getApplicationContext(), location, cloudCredentials)
+                                                .withDefaultScanner()
+                                                .build();
+                                indoorLocationManager.setOnPositionUpdateListener(new OnPositionUpdateListener() {
+                                    @Override
+                                    public void onPositionUpdate(final LocationPosition locationPosition) {
+                                        dispatchMessage(new LinkedHashMap<String, Object>() {
+                                            {
+                                                put("type", "SET_USER_BEACON_LOCATION");
+                                                put("origin_lat",originLatitude);
+                                                put("origin_lng",originLongitude);
+                                                put("x",locationPosition.getX());
+                                                put("y",locationPosition.getY());
+                                            }
+                                        });
+                                    }
+                                    @Override
+                                    public void onPositionOutsideLocation() {
+                                        Log.d("on Position Outside", "outside: ");
+                                    }
+                                });
+                                if (userInteract){
+                                    indoorLocationManager.startPositioning();
+                                }
+                            }
+                            @Override
+                            public void failure(EstimoteCloudException e) {
+                                Log.d("failed", "failed to get location from cloud: ");
+                                if (userInteract){
+                                    dispatchMessage(new LinkedHashMap<String, Object>() {
+                                        {
+                                            put("type", "START_UPDATING_BEACON_LOCATION");
+                                            put("is_beacon_location_activated",false);
+                                        }
+                                    });
+                                }
                             }
                         });
                     }
-                    @Override
-                    public void onPositionOutsideLocation() {
-                        Log.d("on Position Outside", "outside: ");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (userInteract) {
+                        dispatchMessage(new LinkedHashMap<String, Object>() {
+                            {
+                                put("type", "START_UPDATING_BEACON_LOCATION");
+                                put("is_beacon_location_activated", false);
+                            }
+                        });
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                TUtils.showNoInternetAccssesDialog(mainActivity, "error", "something happen while retriving location from internet. check internet connection and try again");
+                            }
+                        });
                     }
-                });
-            }
-            @Override
-            public void failure(EstimoteCloudException e) {
-                Log.d("failed", "failed to get location from cloud: ");
+                }
             }
         });
+
     }
     private void setTagipediaObjectAndLoadMap() {
         String tbString =
@@ -336,7 +366,6 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
                 }
             });
         } else if (message.get("type").equals("MAP_LOADED")){
-            initializeBeaconLocation();
 //            dispatchMessage(new LinkedHashMap<String, Object>() {
 //                {
 //                    put("type", "ENABLE_GPS_BUTTON");
@@ -348,7 +377,7 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
                 }
             });
 
-            initializeBeaconLocation();
+            initializeBeaconLocation(false);
         } else if(message.get("type").equals("FEATURES_TAPPED")){
             dispatchMessage(new LinkedHashMap<String, Object>() {
                 {
@@ -368,6 +397,9 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
                 }
             });
         } else if (message.get("type").equals("CHECK_BEACON_LOCATION_AVAILABILITY")){
+            if(indoorLocationManager == null){
+                initializeBeaconLocation(true);
+            }
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter.isEnabled()) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -389,7 +421,7 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
             }
         } else if (message.get("type").equals("START_POSITION_UPDATES_FOR_BEACON_LOCATION")){
             boolean stat_beacon_manager = (boolean) message.get("start_beacon_manager");
-            if (stat_beacon_manager){
+            if (stat_beacon_manager && indoorLocationManager != null){
                 indoorLocationManager.startPositioning();
             }
             else {

@@ -60,4 +60,16 @@ public final class TUtils {
             builder.show();
         }
     }
+    public static void showNoInternetAccssesDialog(final Activity activity, String title, String message){
+        new AlertDialog.Builder(activity)
+                .setMessage(message)
+                .setTitle(title)
+                .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
 }
