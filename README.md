@@ -319,6 +319,34 @@ new HashMap<String, Object>(){{
 }};
 ```
 
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "LocationUpdated");
+  put("event_action", "Gps");
+  put("event_label", latitude/longitude);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+      put("lat", latitude);
+      put("lng", longitude);
+  }});
+}};
+```
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "LocationUpdated");
+  put("event_action", "Beacon");
+  put("event_label", latitude/longitude);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+      put("lat", latitude);
+      put("lng", longitude);
+  }});
+}};
+```
+
 ___
 
 #### <a name="LOCATION_SERVICE">Check Location Service</a>
