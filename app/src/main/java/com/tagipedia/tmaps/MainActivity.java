@@ -371,13 +371,13 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
 //                    put("type", "ENABLE_GPS_BUTTON");
 //                }
 //            });
-            dispatchMessage(new LinkedHashMap<String, Object>() {
-                {
-                    put("type", "ENABLE_BEACON_LOCATION_BUTTON");
-                }
-            });
-
-            initializeBeaconLocation(false);
+//            dispatchMessage(new LinkedHashMap<String, Object>() {
+//                {
+//                    put("type", "ENABLE_BEACON_LOCATION_BUTTON");
+//                }
+//            });
+//
+//            initializeBeaconLocation(false);
         } else if(message.get("type").equals("FEATURES_TAPPED")){
             dispatchMessage(new LinkedHashMap<String, Object>() {
                 {
