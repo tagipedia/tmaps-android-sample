@@ -4,7 +4,7 @@
 ### To integrate TMaps into your Android Studio project, add it to your project:
 1. Create folder named tmapswww
 2. Download and Unzip map package inside tmapswww (Request map package from Tagipedia Team)
-3. Duplicate Config.Secrets.Example.plist and rename it to 'Config.Secrets.plist' and fill the file with your configration info
+3. Duplicate Config.Secrets.Example.xml and rename it to 'Config.Secrets.xml' and fill the file with your configration info
 4. Read our sample for examples
 
 ## How it works
