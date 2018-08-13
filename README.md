@@ -403,8 +403,11 @@ dispatch it to change theme of map.
 
 ```java
 new HashMap<String, Object>(){{
-  put("primary", primary_color);
-  put("accent", accent_color);
+  put("type", "SET_THEME");
+  put("theme", new HashMap<String, Object>(){{
+     put("primary", primary_color);
+     put("accent", accent_color);
+  }});
 }}
 ```
 
