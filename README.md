@@ -673,8 +673,29 @@ new HashMap<String, Object>(){{
   put("device_type", "ANDROID");
 }}
 ```
+&nbsp;&nbsp;&nbsp;&nbsp;**device_id**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *String* 
 
+&nbsp;&nbsp;&nbsp;&nbsp;**device_type**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *String* with ANDROID
 
+___
+#### Set application secrets
+
+dispatch it to set client id and client secret
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "SET_APPLICATION_SECRETS");
+  put("client_id", client_id);
+  put("client_secret", client_secret);
+}}
+```
+&nbsp;&nbsp;&nbsp;&nbsp;**client_id**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *String* 
+
+&nbsp;&nbsp;&nbsp;&nbsp;**client_secret**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *String* 
 
 ## Types
 
