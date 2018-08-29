@@ -319,6 +319,34 @@ new HashMap<String, Object>(){{
 }};
 ```
 
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "LocationUpdated");
+  put("event_action", "Gps");
+  put("event_label", latitude/longitude);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+      put("lat", latitude);
+      put("lng", longitude);
+  }});
+}};
+```
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "EVENT_LOGGED");
+  put("event_category", "LocationUpdated");
+  put("event_action", "Beacon");
+  put("event_label", latitude/longitude);
+  put("fields_object", new HashMap<String, Object>(){{
+      put("map_id", map_id);
+      put("lat", latitude);
+      put("lng", longitude);
+  }});
+}};
+```
+
 ___
 
 #### <a name="LOCATION_SERVICE">Check Location Service</a>
@@ -582,6 +610,7 @@ new HashMap<String, Object>(){{
 &nbsp;&nbsp;&nbsp;&nbsp;**is_gps_activated**
 &nbsp;&nbsp;&nbsp;&nbsp;**Required** *boolean* 
 
+___
 #### Show Beacon Location Button
 
 dispatch it after Map Loaded to show Beacon Location button
@@ -592,6 +621,7 @@ new HashMap<String, Object>(){{
 }}
 ```
 
+___
 #### <a name="start_updating_beacon_location">Start Updating Location using Beacon Location</a>
 
 dispatch it after <a href="#BEACON_LOCATION_SERVICE">check</a> beacon location service to start updating user location and showing nearest places to user
@@ -606,7 +636,7 @@ new HashMap<String, Object>(){{
 &nbsp;&nbsp;&nbsp;&nbsp;**is_beacon_location_activated**
 &nbsp;&nbsp;&nbsp;&nbsp;**Required** *boolean* 
 
-
+___
 #### <a name="SET_USER_BEACON_LOCATION">Update User Location (Beacon Location)</a>
 
 dispatch it after beacon location service <a href="#START_POSITION_UPDATES_FOR_BEACON_LOCATION">started</a> to update user location and showing nearest places to user
@@ -629,6 +659,43 @@ new HashMap<String, Object>(){{
 &nbsp;&nbsp;&nbsp;&nbsp;**Required** *Number* </br>
 &nbsp;&nbsp;&nbsp;&nbsp;**origin_lng**
 &nbsp;&nbsp;&nbsp;&nbsp;**Required** *Number* 
+
+
+___
+#### Set device data
+
+dispatch it to set device id and device type 
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "SET_DEVICE_DATA");
+  put("device_id", device_id);
+  put("device_type", "ANDROID");
+}}
+```
+&nbsp;&nbsp;&nbsp;&nbsp;**device_id**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *String* 
+
+&nbsp;&nbsp;&nbsp;&nbsp;**device_type**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *String* with ANDROID
+
+___
+#### Set application secrets
+
+dispatch it to set client id and client secret
+
+```java
+new HashMap<String, Object>(){{
+  put("type", "SET_APPLICATION_SECRETS");
+  put("client_id", client_id);
+  put("client_secret", client_secret);
+}}
+```
+&nbsp;&nbsp;&nbsp;&nbsp;**client_id**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *String* 
+
+&nbsp;&nbsp;&nbsp;&nbsp;**client_secret**
+&nbsp;&nbsp;&nbsp;&nbsp;**Required** *String* 
 
 ## Types
 
