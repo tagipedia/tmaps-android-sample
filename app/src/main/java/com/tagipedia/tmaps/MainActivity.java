@@ -4,9 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -14,13 +12,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
@@ -50,7 +48,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -59,9 +56,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -363,6 +358,20 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
                 {
                     put("type", "LOAD_MAP");
                     put("map_id", mapId );
+                }
+            });
+            dispatchMessage(new LinkedHashMap<String, Object>() {
+                {
+                    put("type", "SET_APPLICATION_SECRETS");
+                    put("client_id", getResources().getString(R.string.client_id));
+                    put("client_secret", getResources().getString(R.string.client_secret));
+                }
+            });
+            dispatchMessage(new LinkedHashMap<String, Object>() {
+                {
+                    put("type", "SET_DEVICE_DATA");
+                    put("device_id", Settings.Secure.getString(getApplicationContext().getContentResolver(),Settings.Secure.ANDROID_ID).toString());
+                    put("device_type", "ANDROID");
                 }
             });
         } else if (message.get("type").equals("MAP_LOADED")){
