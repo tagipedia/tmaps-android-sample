@@ -866,6 +866,22 @@ check if tenant or feature have name.
 poi.hasName()
 ```
 ___
+#### getDisplayCategory
+
+get first category of tenant or feature if there is category.
+
+```js
+poi.getDisplayCategory()
+```
+___
+#### hasCategories
+
+check if tenant or feature have categories. 
+
+```js
+poi.hasCategories()
+```
+___
 #### isBuilding
 
 check if feature is building.
@@ -907,6 +923,58 @@ you should dispatch <a href="#HIGHLIGHT_FEATURE">HIGHLIGHT_FEATURE</a> for initi
 you should dispatch <a href="#SET_DEFAULT_FEATURE_POPUP_TEMPLATE">SET_DEFAULT_FEATURE_POPUP_TEMPLATE</a> for your customized template and add your custom buttons and use <a href="#dispatchToContainer">dispatchToContainer</a> when button clicked to handle the click action in your APP.
 
 
+## Important Notes 
+### Our default feature popup template
+
+``` html
+<md-card id="{{poi.id}}" class="feature-popup display-none slide-up">
+  <div layout="row" layout-align="end start" >
+    <md-card-title class="padding-bottom-overide" layout="row" layout-align="center center">
+      <md-card-title-media ng-if="poi.getDisplayName()">
+        <div class="circle" layout="row" layout-align="center center">
+          <md-icon ng-if="!poi.getIcon()" md-font-set="material-icons" class="camera-icon">camera_alt</md-icon>
+          <img ng-if="poi.getIcon()" ng-src="{{poi.getIcon()}}" />
+        </div>
+      </md-card-title-media>
+      <md-card-title-text >
+        <div class="md-subline">{{poi.getDisplayName() || poi.getDisplayCategory()}}</div>
+        <div ng-if="poi.getBoothId()" layout="row">
+          <div class="categoryline" >
+            <div class="margin-right-margin-left">{{poi.getBoothId()}}</div>
+          </div>
+        </div>
+        <div ng-if="poi.category" layout="row">
+          <div class="categoryline" >
+            <div class="margin-right-margin-left">{{poi.category}}</div>
+          </div>
+        </div>
+      </md-card-title-text>
+    </md-card-title>
+    <md-button id="close-info" class="md-icon-button" ng-click="closeInfo()">
+      <md-icon md-font-set="material-icons" aria-label="close info">close</md-icon>
+    </md-button>
+  </div>
+  <md-card-actions layout="row" layout-align="center center" >
+    <div ng-if="poi.category === 'wheelchair-bathroom'" layout="row" layout-align="center center">
+      <i class="fa fa-3x fa-wheelchair"></i>
+    </div>
+    <!-- <md-divider></md-divider> -->
+
+    <br ng-if="poi.category === 'wheelchair-bathroom'"  />
+    <br ng-if="poi.category === 'wheelchair-bathroom'"  />
+    <div flex ng-if="enableRouting && poi.entrances && poi.entrances.length" class="feature-routing-buttons" layout="row" layout-align="center center">
+      <md-button layout="row" class="md-raised md-primary" ng-click="showRoutingDialog($event, {from: poi})">
+        <div class="margin-right-margin-left"> Route From</div>
+        <md-icon md-font-set="material-icons" >adjust</md-icon>
+      </md-button>
+      <md-button layout="row" class="md-raised md-primary" ng-click="showRoutingDialog($event, {to:poi})">
+        <div class="margin-right-margin-left"> Route To</div>
+        <md-icon md-font-set="material-icons" >flag</md-icon>
+      </md-button>
+    </div>
+  </md-card-actions>
+</md-card>
+```
 
 
 
