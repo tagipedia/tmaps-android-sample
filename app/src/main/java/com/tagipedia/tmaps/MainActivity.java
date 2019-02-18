@@ -353,13 +353,6 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
 //                    put("template", MainActivity.this.getCustomTemplate());
 //                }
 //            });
-
-            dispatchMessage(new LinkedHashMap<String, Object>() {
-                {
-                    put("type", "LOAD_MAP");
-                    put("map_id", mapId );
-                }
-            });
             dispatchMessage(new LinkedHashMap<String, Object>() {
                 {
                     put("type", "SET_APPLICATION_SECRETS");
@@ -372,6 +365,12 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
                     put("type", "SET_DEVICE_DATA");
                     put("device_id", Settings.Secure.getString(getApplicationContext().getContentResolver(),Settings.Secure.ANDROID_ID).toString());
                     put("device_type", "ANDROID");
+                }
+            });
+            dispatchMessage(new LinkedHashMap<String, Object>() {
+                {
+                    put("type", "LOAD_MAP");
+                    put("map_id", mapId );
                 }
             });
         } else if (message.get("type").equals("MAP_LOADED")){
