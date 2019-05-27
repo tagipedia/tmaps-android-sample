@@ -47,6 +47,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.mapbox.geojson.Point;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +57,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,6 +72,7 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
     private String mGeolocationOrigin;
     private GeolocationPermissions.Callback mGeolocationCallback;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private static final int REQUEST_NAVIGATION = 0x2;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     public static String locationDetails = "";
     public double originLatitude = 0, originLongitude = 0;
@@ -87,6 +90,7 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
         Bundle bundle = getIntent().getExtras();
         mapId = bundle.getString("mapId");
         // tmapWebView=(WebView) findViewById(R.id.mapWebView);
+        WebView.setWebContentsDebuggingEnabled(true);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
         mWebView.getSettings().setAllowFileAccessFromFileURLs(true);
@@ -369,16 +373,22 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
             });
             dispatchMessage(new LinkedHashMap<String, Object>() {
                 {
+                    put("type", "SET_MAPBOX_ACCESS_TOKEN");
+                    put("access_token", getResources().getString(R.string.mapbox_access_token));
+                }
+            });
+            dispatchMessage(new LinkedHashMap<String, Object>() {
+                {
                     put("type", "LOAD_MAP");
                     put("map_id", mapId );
                 }
             });
         } else if (message.get("type").equals("MAP_LOADED")){
-//            dispatchMessage(new LinkedHashMap<String, Object>() {
-//                {
-//                    put("type", "ENABLE_GPS_BUTTON");
-//                }
-//            });
+            dispatchMessage(new LinkedHashMap<String, Object>() {
+                {
+                    put("type", "ENABLE_GPS_BUTTON");
+                }
+            });
 //            dispatchMessage(new LinkedHashMap<String, Object>() {
 //                {
 //                    put("type", "ENABLE_BEACON_LOCATION_BUTTON");
@@ -435,6 +445,21 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
             else {
                 indoorLocationManager.stopPositioning();
             }
+        }  else if (message.get("type").equals("START_NAVIGATION")){
+            runOnUiThread(new Runnable() { @Override public void run() {
+                Map originMap = (Map)message.get("origin");
+                Map destinationMap = (Map)message.get("destination");
+                String profile = (String)message.get("profile");
+                Point origin = Point.fromLngLat((double)originMap.get("lng"), (double)originMap.get("lat"));
+                Point destination = Point.fromLngLat((double)destinationMap.get("lng"), (double)destinationMap.get("lat"));
+                Intent intent = new Intent(MainActivity.this,EmbeddedNavigationActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("origin", origin);
+                bundle.putSerializable("destination", destination);
+                bundle.putString("profile", profile);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, REQUEST_NAVIGATION);
+            } });
         }
     }
 
@@ -515,6 +540,32 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener{
                         break;
                 }
                 break;
+            case REQUEST_NAVIGATION:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        Bundle bundle = data.getExtras();
+                        Point origin = (Point) bundle.getSerializable("origin");
+                        Point destination = (Point) bundle.getSerializable("destination");
+                        String profile = bundle.getString("profile");
+                        dispatchMessage(new LinkedHashMap<String, Object>() {
+                            {
+                                put("type", "NAVIGATION_END");
+                                put("origin", Arrays.asList(origin.longitude(), origin.latitude()));
+                                put("destination", Arrays.asList(destination.longitude(), destination.latitude()));
+                                put("profile", profile);
+                            }
+                        });
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        dispatchMessage(new LinkedHashMap<String, Object>() {
+                            {
+                                put("type", "NAVIGATION_CANCELED");
+                            }
+                        });
+                        break;
+                }
+                break;
+
         }
     }
 
